@@ -13,23 +13,31 @@
           placeholder="질문 + 답변 검색..."
           class="search-input"
         />
+        <!--새 질문 추가-->
+        <div class="new-question">
+        <form @submit.prevent="addQuestion">
+        <label for="newQuestion">새 질문:&nbsp;&nbsp;&nbsp; </label>
+        <input type="text" id="newQuestion" v-model="newQuestion" placeholder="새 질문을 입력하세요" />
+        <button type="submit">추가</button>
+          </form>
+        </div>
         <ul>
           <li v-for="(question, index) in filteredQuestions" :key="index" class="question-item">
             <div class="question-header">
-              <button class="ellipsis-btn" @click="toggleOptions(index)">...</button>
+              <button class="ellipsis-btn" @click="toggleOptions(index)">&#x22EE;</button>
               <span><strong>질문:</strong> {{ question.text }}</span>
               <div v-if="activeOptions === index" class="options-menu">
-                <button @click="editQuestion(index)">수정</button>
-                <button @click="deleteQuestion(index)">삭제</button>
+                <button @click="editQuestion(index)">✎</button>
+                <button @click="deleteQuestion(index)">❌</button>
               </div>
             </div>
             <!-- 저장된 답변 표시 -->
             <div v-if="question.answer" class="answer-display">
-              <button class="ellipsis-btn" @click="toggleAnswerOptions(index)">...</button>
+              <button class="ellipsis-btn" @click="toggleAnswerOptions(index)">&#x22EE;</button>
               <strong>답변:</strong> {{ question.answer }}
               <div v-if="activeAnswerOptions === index" class="options-menu">
-                <button @click="editAnswer(index)">수정</button>
-                <button @click="deleteAnswer(index)">삭제</button>
+                <button @click="editAnswer(index)">✎</button>
+                <button @click="deleteAnswer(index)">❌</button>
               </div>
             </div>
             <!-- 질문에 답변을 추가할 부분 -->
@@ -53,15 +61,6 @@
         </div>
       </div>
     </main>
-
-    <!-- 새 질문 추가 -->
-    <footer class="footer">
-      <form @submit.prevent="addQuestion">
-        <label for="newQuestion">새 질문:&nbsp;&nbsp;&nbsp; </label>
-        <input type="text" id="newQuestion" v-model="newQuestion" placeholder="새 질문을 입력하세요" />
-        <button type="submit">추가</button>
-      </form>
-    </footer>
   </div>
 </template>
 
@@ -102,12 +101,12 @@ export default {
 },
 
   methods: {
-  addQuestion() {
-    if (this.newQuestion.trim()) {
-      const newQuestion = { text: this.newQuestion.trim(), answer: "", newAnswer: "" };
-      this.questions.push(newQuestion);
-      this.newQuestion = "";
-      this.saveToLocalStorage();
+    addQuestion() {
+  if (this.newQuestion.trim()) {
+    const newQuestion = { text: this.newQuestion.trim(), answer: "", newAnswer: "" };
+    this.questions.unshift(newQuestion); // 기존 push() 대신 unshift() 사용
+    this.newQuestion = "";
+    this.saveToLocalStorage();
     }
   },
   saveAnswer(index) {
@@ -234,6 +233,35 @@ export default {
   margin-bottom: 20px; /* 질문 항목 간의 간격을 넓힘 */
 }
 
+.ellipsis-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #666; /* 기본 색상 */
+  padding: 5px;
+  border-radius: 50%;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.ellipsis-btn:hover {
+  background: rgba(0, 0, 0, 0.1); /* 호버 시 약간의 배경 효과 */
+}
+
+.ellipsis-btn:active {
+  transform: scale(0.9); /* 클릭 시 약간 축소 */
+}
+
+.options-menu.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.options-menu button:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
 /* 답변 입력 영역 */
 .answer-section {
   display: flex;
@@ -275,14 +303,7 @@ export default {
   transform: translateY(1px); /* 눌렸을 때 버튼이 살짝 내려가는 효과 */
 }
 
-.footer {
-  display: flex;
-  justify-content: center;
-  padding: 20px;
-  border-top: 2px solid #333; /* 상단에 고급스러운 구분선 */
-}
-
-.footer form {
+.new-question form {
   display: flex;
   width: 90%;
   max-width: 700px;
@@ -293,7 +314,7 @@ export default {
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }
 
-.footer input {
+.new-question input {
   flex-grow: 1;
   padding: 12px;
   border: 1px solid #444;
@@ -302,12 +323,12 @@ export default {
   font-size: 1rem;
 }
 
-.footer input:focus {
+.new-question input:focus {
   outline: none;
   border-color: #28a745; /* 초록색 포커스 색상 */
 }
 
-.footer button {
+.new-question button {
   padding: 12px 18px;
   background-color: #28a745; /* 초록색 버튼 */
   color: white;
@@ -318,12 +339,12 @@ export default {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.footer button:hover {
+.new-question button:hover {
   background-color: #218838; /* 버튼 호버 시 어두운 초록 */
   transform: translateY(-2px); /* 버튼을 약간 위로 올리는 효과 */
 }
 
-.footer button:active {
+.new-question button:active {
   transform: translateY(1px); /* 클릭 시 버튼 살짝 눌리는 효과 */
 }
 </style>
