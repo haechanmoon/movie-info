@@ -67,6 +67,7 @@ export default {
   cursor: pointer;
   font-size: 16px;
   transition: background 0.3s;
+  margin-top: 10px; /* 버튼 간 간격 조절 */
 }
 
 /* 버튼 마우스 오버 효과 */
