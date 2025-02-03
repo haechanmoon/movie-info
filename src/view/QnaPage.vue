@@ -57,7 +57,7 @@
     <!-- 새 질문 추가 -->
     <footer class="footer">
       <form @submit.prevent="addQuestion">
-        <label for="newQuestion">새 질문:</label>
+        <label for="newQuestion">새 질문:&nbsp;&nbsp;&nbsp; </label>
         <input type="text" id="newQuestion" v-model="newQuestion" placeholder="새 질문을 입력하세요" />
         <button type="submit">추가</button>
       </form>
@@ -205,19 +205,22 @@ export default {
 .questions-card {
   background: white;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
+  border-radius: 12px; /* 더 부드러운 라운드 모서리 */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 더 깊고 자연스러운 그림자 */
+  max-width: 650px; /* 최대 너비를 약간 확대 */
   width: 100%;
+  margin-bottom: 20px; /* 카드를 여러 개 배치할 때 마진을 주어 간격을 더 넓힘 */
+  box-sizing: border-box; /* 패딩과 경계선을 포함해 사이즈 계산 */
 }
-
 /* 검색 입력창 스타일 */
 .search-input {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
+  padding: 12px;
+  margin-bottom: 20px; /* 검색 입력창 하단에 충분한 여백 추가 */
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 10px; /* 입력창에 더 부드러운 경계 */
+  font-size: 1rem;
+  box-sizing: border-box;
 }
 
 /* 질문 아이템 스타일 */
@@ -226,14 +229,15 @@ export default {
   border-bottom: 1px solid #eee;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start; /* 질문을 상단에 정렬 */
   position: relative;
+  margin-bottom: 20px; /* 질문 항목 간의 간격을 넓힘 */
 }
 
 /* 답변 입력 영역 */
 .answer-section {
   display: flex;
-  margin-top: 10px;
+  margin-top: 20px; /* 답변 섹션 위쪽 여백을 늘려서 간격을 더 줌 */
   align-items: center;
 }
 
@@ -249,57 +253,77 @@ export default {
 .pagination {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 30px; /* 페이지 버튼과 질문 카드 간의 여백을 넓힘 */
 }
 
 .pagination button {
-  padding: 8px 12px;
+  padding: 10px 16px;
   border: 1px solid #ccc;
   background-color: white;
   cursor: pointer;
-  margin: 0 5px;
-  border-radius: 5px;
+  margin: 0 8px; /* 버튼 간 간격을 넓힘 */
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .pagination button:hover {
-  background-color: #dcdcdc;
-  transition: background-color 0.3s ease;
+  background-color: #f1f1f1;
 }
 
-/* 새 질문 입력 영역 */
+.pagination button:active {
+  transform: translateY(1px); /* 눌렸을 때 버튼이 살짝 내려가는 효과 */
+}
+
 .footer {
   display: flex;
   justify-content: center;
-  padding: 15px;
-  background-color: #f5f5f5;
-  border-top: 1px solid #ddd;
+  padding: 20px;
+  border-top: 2px solid #333; /* 상단에 고급스러운 구분선 */
 }
 
 .footer form {
   display: flex;
-  width: 80%;
-  max-width: 600px;
+  width: 90%;
+  max-width: 700px;
   justify-content: space-between;
   align-items: center;
+  padding: 10px;
+  border-radius: 30px; /* 라운드 코너 */
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }
 
 .footer input {
   flex-grow: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-right: 10px;
+  padding: 12px;
+  border: 1px solid #444;
+  border-radius: 20px;
+  margin-right: 15px;
+  font-size: 1rem;
+}
+
+.footer input:focus {
+  outline: none;
+  border-color: #28a745; /* 초록색 포커스 색상 */
 }
 
 .footer button {
-  padding: 8px 12px;
-  background-color: #28a745;
+  padding: 12px 18px;
+  background-color: #28a745; /* 초록색 버튼 */
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .footer button:hover {
-  background-color: #218838;
+  background-color: #218838; /* 버튼 호버 시 어두운 초록 */
+  transform: translateY(-2px); /* 버튼을 약간 위로 올리는 효과 */
+}
+
+.footer button:active {
+  transform: translateY(1px); /* 클릭 시 버튼 살짝 눌리는 효과 */
 }
 </style>
