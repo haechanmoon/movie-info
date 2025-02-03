@@ -1,19 +1,6 @@
 <template>
   <div id="qna">
-    <router-view></router-view>
     <!-- 상단 -->
-    <header class="header">
-      <div class="logo">LOGO</div>
-      <nav class="nav">
-        <button @click="goToPage('mypage')">마이페이지</button>
-        <button @click="goToPage('qa')">문답</button>
-        <button @click="goToPage('memories')">주마등</button>
-        <button @click="goToPage('friends')">친구페이지</button>
-      </nav>
-      <div class="signup">
-        <button @click="goToPage('signup')">회원가입</button>
-      </div>
-    </header>
 
     <!-- 문답 페이지 내용 -->
     <main class="main">
@@ -80,6 +67,7 @@
 
 <script>
 export default {
+  name: 'QnA',
   data() {
     return {
       newQuestion: "",
@@ -114,10 +102,6 @@ export default {
 },
 
   methods: {
-    goToPage(route) {
-      // this.$router.push는 vue-router의 메서드로, 페이지를 변경하는 기능을 수행
-      this.$router.push({ name: route });
-    },
   addQuestion() {
     if (this.newQuestion.trim()) {
       const newQuestion = { text: this.newQuestion.trim(), answer: "", newAnswer: "" };
@@ -215,25 +199,6 @@ export default {
   padding: 20px;
   flex-direction: column;
   align-items: center;
-}
-
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.nav button,
-.signup button {
-  margin: 0 5px;
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  background-color: white;
-  cursor: pointer;
-}
-
-.nav button:hover,
-.signup button:hover {
-  background-color: #eee;
 }
 
 /* 질문 카드 스타일 */

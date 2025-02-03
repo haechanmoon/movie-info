@@ -1,0 +1,55 @@
+<template>
+    <header class="header">
+        <div class="logo">
+        <button @click="goToPage('main')"> LOGO </button>
+        </div>
+        <nav class="nav">
+        <button @click="goToPage('mypage')">마이페이지</button>
+        <button @click="goToPage('qa')">문답</button>
+        <button @click="goToPage('memories')">주마등</button>
+        <button @click="goToPage('friends')">친구페이지</button>
+        </nav>
+        <div class="signup">
+        <button @click="goToPage('signup')">회원가입</button>
+        </div>
+    </header>
+</template>
+<script>
+export default {
+  methods: {
+    goToPage(route) {
+      this.$router.push({ name: route });
+    }
+  }
+};
+</script>
+
+<style scoped>
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
+
+.logo button {
+  all: unset;
+}
+
+
+.nav button,
+.signup button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+}
+
+.nav button:hover,
+.signup button:hover {
+  background-color: #eee;
+}
+</style>
