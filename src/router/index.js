@@ -4,7 +4,7 @@ import Mypage from '../view/Mypage.vue';
 import QnaPage from '../view/QnaPage.vue';
 import Memories from '../view/Memories.vue';
 import Friends from '../view/Friends.vue';
-import Signup from '../view/Signup.vue';
+import Signup from '../view/SignupPage.vue';
 
 const routes = [
   { path: '/', component: Main, name: 'main' },

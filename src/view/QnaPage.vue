@@ -57,7 +57,7 @@
         <div class="pagination">
           <button v-if="currentPage > 1" class="small-btn" @click="changePage(currentPage - 1)">이전</button>
           <span>{{ currentPage }} / {{ totalPages }}</span>
-          <button v-if="currentPage < totalPages" class="small-btn" @click="changePage(currentPage + 1)">다음</button>
+          <button v-if="currentPage < totalPages || currentPage==1" class="small-btn" @click="changePage(currentPage + 1)">다음</button>
         </div>
       </div>
     </main>
