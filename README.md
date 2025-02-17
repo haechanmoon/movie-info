@@ -1,4 +1,4 @@
-# movie-info
+# juma2025
 
 ## Project setup
 ```
