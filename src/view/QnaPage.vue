@@ -22,7 +22,7 @@
           </form>
         </div>
         <ul>
-          <li v-for="(question, index) in filteredQuestions" :key="index" class="question-item">
+          <li v-for="(question, index) in paginatedQuestions" :key="index" class="question-item">
             <div class="question-header">
               <button class="ellipsis-btn" @click="toggleOptions(index)">&#x22EE;</button>
               <span><strong>질문:</strong> {{ question.text }}</span>
@@ -57,7 +57,7 @@
         <div class="pagination">
           <button v-if="currentPage > 1" class="small-btn" @click="changePage(currentPage - 1)">이전</button>
           <span>{{ currentPage }} / {{ totalPages }}</span>
-          <button v-if="currentPage < totalPages || currentPage==1" class="small-btn" @click="changePage(currentPage + 1)">다음</button>
+          <button v-show="currentPage < totalPages" class="small-btn" @click="changePage(currentPage + 1)">다음</button>
         </div>
       </div>
     </main>
@@ -85,88 +85,98 @@ export default {
     };
   },
   computed: {
-  filteredQuestions() {
+    filteredQuestions() {
     const query = this.searchQuery.toLowerCase();
-    const filtered = this.questions.filter((q) =>
+    return this.questions.filter((q) =>
       q.text.toLowerCase().includes(query) || (q.answer && q.answer.toLowerCase().includes(query))
     );
-    return filtered.slice(
-      (this.currentPage - 1) * this.itemsPerPage,
-      this.currentPage * this.itemsPerPage
-    );
+  },
+  paginatedQuestions() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredQuestions.slice(start, start + this.itemsPerPage);
   },
   totalPages() {
-    return Math.ceil(this.questions.length / this.itemsPerPage) || 1;
+  const total = Math.ceil(this.filteredQuestions.length / this.itemsPerPage);
+  return total > 0 ? total : 1; // 최소 1 보장
+    },
   },
-},
-
+  watch: {
+    // 검색어 변경될 때 페이지를 1페이지로 초기화 
+    searchQuery() {
+      this.currentPage = 1;
+    },
+  },
   methods: {
     addQuestion() {
-  if (this.newQuestion.trim()) {
-    const newQuestion = { text: this.newQuestion.trim(), answer: "", newAnswer: "" };
-    this.questions.unshift(newQuestion); // 기존 push() 대신 unshift() 사용
-    this.newQuestion = "";
-    this.saveToLocalStorage();
+      if (this.newQuestion.trim()) {
+        const newQuestion = { text: this.newQuestion.trim(), answer: "", newAnswer: "" };
+        this.questions.unshift(newQuestion);
+        this.newQuestion = "";
+        this.saveToLocalStorage();
+      }
+    },
+    saveAnswer(index) {
+      const question = this.paginatedQuestions[index];
+      if (question.newAnswer.trim()) {
+        question.answer = question.newAnswer.trim();
+        question.newAnswer = "";
+        this.saveToLocalStorage();
+      }
+    },
+    toggleOptions(index) {
+      this.activeOptions = this.activeOptions === index ? null : index;
+    },
+    toggleAnswerOptions(index) {
+      this.activeAnswerOptions = this.activeAnswerOptions === index ? null : index;
+    },
+    saveToLocalStorage() {
+      localStorage.setItem("questions", JSON.stringify(this.questions));
+    },
+    changePage(page) {
+    console.log("요청된 페이지:", page); // 🔥 디버깅 로그 추가
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      console.log("변경된 현재 페이지:", this.currentPage); // 🔥 디버깅 로그 추가
     }
   },
-  saveAnswer(index) {
-    const question = this.filteredQuestions[index];
-    if (question.newAnswer.trim()) {
-      question.answer = question.newAnswer.trim();
-      question.newAnswer = "";
-      this.saveToLocalStorage();
-    }
+    editQuestion(index) {
+      const realIndex = (this.currentPage - 1) * this.itemsPerPage + index; // 전체 리스트에서의 인덱스
+      const newQuestionText = prompt('수정할 질문을 입력하세요:', this.questions[realIndex].text);
+      if (newQuestionText) {
+        this.questions[realIndex].text = newQuestionText;
+        this.saveToLocalStorage();
+      }
+    },
+    deleteQuestion(index) {
+      const realIndex = (this.currentPage - 1) * this.itemsPerPage + index;
+      if (confirm('정말로 이 질문을 삭제하시겠습니까?')) {
+        this.questions.splice(realIndex, 1);
+        this.saveToLocalStorage();
+        // 페이지 수가 줄어들면 마지막 페이지를 조정
+        if (this.currentPage > this.totalPages) {
+          this.currentPage = this.totalPages;
+        }
+      }
+    },
+    editAnswer(index) {
+      const question = this.paginatedQuestions[index];
+      const newAnswerText = prompt('수정할 답변을 입력하세요:', question.answer);
+      if (newAnswerText) {
+        question.answer = newAnswerText;
+        this.saveToLocalStorage();
+      }
+    },
+    deleteAnswer(index) {
+      const question = this.paginatedQuestions[index];
+      if (confirm('정말로 이 답변을 삭제하시겠습니까?')) {
+        question.answer = '';
+        this.saveToLocalStorage();
+      }
+    },
   },
-  toggleOptions(index) {
-    this.activeOptions = this.activeOptions === index ? null : index;
-  },
-  toggleAnswerOptions(index) {
-    this.activeAnswerOptions = this.activeAnswerOptions === index ? null : index;
-  },
-  saveToLocalStorage() {
-    localStorage.setItem("questions", JSON.stringify(this.questions));
-  },
-  changePage(page) {
-    this.currentPage = page;
-  },
-  
-  // 질문 수정 메서드
-  editQuestion(index) {
-    const newQuestionText = prompt('수정할 질문을 입력하세요:', this.questions[index].text);
-    if (newQuestionText) {
-      this.questions[index].text = newQuestionText;
-      this.saveToLocalStorage();
-    }
-  },
-  
-  // 질문 삭제 메서드
-  deleteQuestion(index) {
-    if (confirm('정말로 이 질문을 삭제하시겠습니까?')) {
-      this.questions.splice(index, 1);
-      this.saveToLocalStorage();
-    }
-  },
-
-  // 답변 수정 메서드 추가
-  editAnswer(index) {
-    const newAnswerText = prompt('수정할 답변을 입력하세요:', this.filteredQuestions[index].answer);
-    if (newAnswerText) {
-      this.filteredQuestions[index].answer = newAnswerText;
-      this.saveToLocalStorage();
-    }
-  },
-
-  // 답변 삭제 메서드 추가
-  deleteAnswer(index) {
-    if (confirm('정말로 이 답변을 삭제하시겠습니까?')) {
-      this.filteredQuestions[index].answer = '';
-      this.saveToLocalStorage();
-    }
-  },
-}
-
-};  
+};
 </script>
+
 
 <style scoped>
 /* 전체 페이지 스타일 */
@@ -293,6 +303,9 @@ export default {
   border-radius: 10px;
   font-size: 1rem;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 3;
 }
 
 .pagination button:hover {

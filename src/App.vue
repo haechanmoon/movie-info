@@ -1,8 +1,11 @@
 <template>
-  <BaseLayout />
-  <router-view />
-  <FootLayout />
-
+  <div class="app-layout">
+    <BaseLayout />
+    <main class="content">
+      <router-view />
+    </main>
+    <FootLayout />
+  </div>
 </template>
 
 <script>
@@ -13,6 +16,18 @@ export default {
   components: {
     BaseLayout,
     FootLayout
+    
   }
 };
 </script>
+
+<style scoped>
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.content {
+  flex: 1;
+}
+</style>

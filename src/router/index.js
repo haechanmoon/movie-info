@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Main from '../view/Main.vue';
-import Mypage from '../view/Mypage.vue';
+import Mypage from '../view/MyInformation.vue';
 import QnaPage from '../view/QnaPage.vue';
 import Memories from '../view/Memories.vue';
 import Friends from '../view/Friends.vue';
-import Signup from '../view/SignupPage.vue';
+import MyInfo from '../view/MyInformation.vue';
+import MySecu from '../view/MySecurity.vue';
+import SignUpPage from '../view/SignupPage.vue';
 
 const routes = [
   { path: '/', component: Main, name: 'main' },
@@ -12,7 +14,9 @@ const routes = [
   { path: '/qa', component: QnaPage, name: 'qa' },
   { path: '/memories', component: Memories, name: 'memories' },
   { path: '/friends', component: Friends, name: 'friends' },
-  { path: '/signup', component: Signup, name: 'signup' },
+  { path: '/my-information', component: MyInfo, name: 'myinfo' },
+  { path: '/account-security' , component: MySecu, name: 'mysecu' },
+  { path: '/signup', component: SignUpPage , name:'SignUpPage'}, 
     // 'mypage' 라는 이름 추가
 ];
 
